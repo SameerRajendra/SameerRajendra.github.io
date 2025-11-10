@@ -21,7 +21,7 @@ const App: React.FC = () => {
     }, []);
 
     return (
-        <div className="min-h-screen bg-darker relative overflow-hidden">
+        <div className="min-h-screen bg-darker relative overflow-x-hidden">
             {/* Interactive Spotlight Background */}
             <div 
                 className="pointer-events-none fixed inset-0 z-30 transition-opacity duration-300"

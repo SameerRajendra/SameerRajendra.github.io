@@ -21,7 +21,8 @@ const Section: React.FC<SectionProps> = ({ id, title, className = "", children }
                 }
             },
             {
-                threshold: 0.15, 
+                // Lower threshold triggers visibility sooner when entering viewport
+                threshold: 0.1,
             }
         );
 
