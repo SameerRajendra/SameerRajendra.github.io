@@ -13,16 +13,20 @@ const Section: React.FC<SectionProps> = ({ id, title, className = "", children }
     const [isVisible, setIsVisible] = useState(false);
 
     useEffect(() => {
+        // Create observer to detect when section enters viewport
         const observer = new IntersectionObserver(
             ([entry]) => {
+                // entry.isIntersecting will be true when at least 'threshold' of the element is visible
                 if (entry.isIntersecting) {
                     setIsVisible(true);
-                    observer.unobserve(entry.target);
+                    // Once visible, we don't need to keep observing this section
+                    observer.disconnect();
                 }
             },
             {
-                // Lower threshold triggers visibility sooner when entering viewport
-                threshold: 0.1,
+                // 0 means trigger as soon as even 1px is visible. 
+                // This is more reliable than higher thresholds for ensuring content appears.
+                threshold: 0,
             }
         );
 
@@ -30,10 +34,9 @@ const Section: React.FC<SectionProps> = ({ id, title, className = "", children }
             observer.observe(sectionRef.current);
         }
 
+        // Cleanup observer on component unmount
         return () => {
-            if (sectionRef.current) {
-                observer.unobserve(sectionRef.current);
-            }
+            observer.disconnect();
         };
     }, []);
 
@@ -41,6 +44,8 @@ const Section: React.FC<SectionProps> = ({ id, title, className = "", children }
         <section 
             id={id} 
             ref={sectionRef}
+            // Default state is opacity-0 and translated down. 
+            // When isVisible becomes true, transition to opacity-100 and normal position.
             className={`py-24 px-6 md:px-12 lg:px-24 max-w-7xl mx-auto scroll-mt-20 transition-all duration-1000 ease-out ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-16'} ${className}`}
         >
             {title && (
