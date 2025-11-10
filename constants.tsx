@@ -1,0 +1,124 @@
+import React from 'react';
+import { ExperienceItem, EducationItem, ProjectItem, SkillCategory } from './types';
+
+export const PERSONAL_INFO = {
+    name: "Sameer Rajendra",
+    title: "Machine Learning & AI Engineer",
+    tagline: "Deep Learning | Computer Vision | Transformer | PyTorch",
+    email: "sameer.rajendra@outlook.com",
+    linkedin: "https://www.linkedin.com/in/sameer-rajendra",
+    location: "Jersey City, New Jersey, United States",
+    about: [
+        "I am someone who approaches problems by bringing people together first. My role often goes beyond just writing code; I actively participate in brainstorming approaches, implementing solutions, analyzing results, and iterating—a cycle that has taught me that the best solutions come from collaboration.",
+        "I also deeply value independent learning. When working on my own projects, I start by digging into research papers to understand the fundamentals. Whether it's understanding the medical side of retinopathy before applying CNNs, or discovering CUDA to speed up training when I got stuck, I embrace the challenge of learning something new every time.",
+        "Currently pursuing my Master's in Applied Artificial Intelligence at Stevens Institute of Technology, I am driven by the combination of asking good questions, listening to others, and staying curious."
+    ]
+};
+
+export const EXPERIENCES: ExperienceItem[] = [
+    {
+        id: "oneirix",
+        title: "Associate Engineer",
+        company: "Oneirix Labs",
+        period: "Sep 2021 - June 2024",
+        location: "Pune, Maharashtra, India",
+        description: [
+            "Developed and trained computer vision models for detecting humans and objects in real-time CCTV footage using OpenCV and PyTorch.",
+            "Designed an ML-based diagnostic model to detect stenosis in coronary arteries, improving detection methods through iterative brainstorming and implementation cycles.",
+            "Developed communication algorithms using C++ to facilitate interaction between traffic signal controllers and scheduler algorithms.",
+            "Deployed models using Docker, ensuring smooth integration into production environments."
+        ]
+    },
+    {
+        id: "siemens",
+        title: "Summer Intern",
+        company: "Siemens",
+        period: "June 2019 - July 2019",
+        location: "Aurangabad, Maharashtra, India",
+        description: [
+            "Gained exposure to industrial automation and engineering processes during a dedicated summer internship."
+        ]
+    }
+];
+
+export const EDUCATION: EducationItem[] = [
+    {
+        id: "stevens",
+        degree: "Master of Science - MS, Applied Artificial Intelligence",
+        institution: "Stevens Institute of Technology",
+        period: "Aug 2024 - June 2026 (Expected)",
+        details: "Currently pursuing, taking advanced courses including OpenCV."
+    },
+    {
+        id: "symbiosis",
+        degree: "Bachelor of Technology - BTech, Mechatronics, Robotics, and Automation Engineering",
+        institution: "Symbiosis Skills & Professional University",
+        period: "Aug 2017 - June 2021"
+    }
+];
+
+export const PROJECTS: ProjectItem[] = [
+    {
+        id: "stenosis",
+        title: "Coronary Stenosis Detection",
+        description: "Designed an ML-based diagnostic model to automate the detection of stenosis in coronary arteries, aiding medical professionals with faster initial diagnosis.",
+        tags: ["Machine Learning", "Medical AI", "Diagnostic Models"]
+    },
+    {
+        id: "cctv",
+        title: "Real-time CCTV Analytics",
+        description: "Built end-to-end computer vision pipelines for real-time detection of humans and objects in surveillance footage, deployed for active monitoring.",
+        tags: ["Computer Vision", "PyTorch", "OpenCV", "Real-time"]
+    },
+    {
+        id: "retinopathy",
+        title: "Retinopathy Detection with CUDA",
+        description: "Researched medical fundamentals to inform CNN architecture design. optimized training performance significantly by leveraging CUDA for GPU acceleration.",
+        tags: ["Deep Learning", "CNN", "CUDA", "Healthcare"]
+    },
+    {
+        id: "laparoscopic",
+        title: "Automated Laparoscopic Pump",
+        description: "Publication: Development and prototyping of an Automated Laparoscopic Irrigation and Suction Pump.",
+        tags: ["Prototyping", "Medical Devices", "Automation"]
+    }
+];
+
+export const SKILLS: SkillCategory[] = [
+    {
+        category: "Core AI & ML",
+        skills: ["Deep Learning", "Computer Vision", "Machine Learning", "Transformer", "Problem Solving"]
+    },
+    {
+        category: "Languages & Tools",
+        skills: ["Python", "C++", "PyTorch", "OpenCV", "Docker", "Git", "CUDA"]
+    }
+];
+
+// Simple SVG Icons
+export const Icons = {
+    Mail: (props: React.SVGProps<SVGSVGElement>) => (
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...props}><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
+    ),
+    Linkedin: (props: React.SVGProps<SVGSVGElement>) => (
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...props}><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect width="4" height="12" x="2" y="9"/><circle cx="4" cy="4" r="2"/></svg>
+    ),
+    MapPin: (props: React.SVGProps<SVGSVGElement>) => (
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...props}><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>
+    ),
+    Download: (props: React.SVGProps<SVGSVGElement>) => (
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...props}><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" x2="12" y1="15" y2="3"/></svg>
+    ),
+    ExternalLink: (props: React.SVGProps<SVGSVGElement>) => (
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...props}><path d="M15 3h6v6"/><path d="M10 14 21 3"/><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/></svg>
+    ),
+    ChevronDown: (props: React.SVGProps<SVGSVGElement>) => (
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...props}><path d="m6 9 6 6 6-6"/></svg>
+    ),
+    Menu: (props: React.SVGProps<SVGSVGElement>) => (
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...props}><line x1="4" x2="20" y1="12" y2="12"/><line x1="4" x2="20" y1="6" y2="6"/><line x1="4" x2="20" y1="18" y2="18"/></svg>
+    ),
+    X: (props: React.SVGProps<SVGSVGElement>) => (
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...props}><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+    )
+};
