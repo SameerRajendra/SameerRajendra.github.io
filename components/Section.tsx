@@ -13,6 +13,12 @@ const Section: React.FC<SectionProps> = ({ id, title, className = "", children }
     const [isVisible, setIsVisible] = useState(false);
 
     useEffect(() => {
+        // Fallback for older browsers or environments that don't support IntersectionObserver
+        if (!('IntersectionObserver' in window)) {
+            setIsVisible(true);
+            return;
+        }
+
         // Create observer to detect when section enters viewport
         const observer = new IntersectionObserver(
             ([entry]) => {
