@@ -19,9 +19,7 @@ const Projects: React.FC = () => {
                                 <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M4 20h16a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.93a2 2 0 0 1-1.66-.9l-.82-1.2A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13c0 1.1.9 2 2 2Z"/></svg>
                             </div>
                             {project.link && (
-                                <a href={project.link} target="_blank" rel="noreferrer" className="text-slate-400 hover:text-primary transition-colors p-2 hover:bg-primary/10 rounded-lg" aria-label={`External link to ${project.title}`}>
-                                    <Icons.ExternalLink className="w-5 h-5" />
-                                </a>
+                                <Icons.ExternalLink className="w-5 h-5 text-slate-400 group-hover:text-primary transition-colors" />
                             )}
                         </div>
                         
@@ -40,6 +38,17 @@ const Projects: React.FC = () => {
                                 </span>
                             ))}
                         </div>
+
+                        {/* Stretched link to make the entire card clickable */}
+                        {project.link && (
+                             <a 
+                                href={project.link} 
+                                target="_blank" 
+                                rel="noreferrer" 
+                                className="absolute inset-0"
+                                aria-label={`View project: ${project.title}`}
+                            ></a>
+                        )}
                     </div>
                 ))}
             </div>
