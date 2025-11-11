@@ -1,7 +1,7 @@
 
 import React from 'react';
-import Section from './Section.tsx';
-import { SKILLS } from '../constants.tsx';
+import Section from './Section';
+import { SKILLS } from '../constants';
 
 const Skills: React.FC = () => {
     return (

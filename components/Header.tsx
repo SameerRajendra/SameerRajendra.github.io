@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Icons } from '../constants.tsx';
+import { Icons } from '../constants';
 
 const Header: React.FC = () => {
     const [isScrolled, setIsScrolled] = useState(false);

@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { PERSONAL_INFO, Icons } from '../constants.tsx';
+import { PERSONAL_INFO, Icons } from '../constants';
 
 const Hero: React.FC = () => {
     return (

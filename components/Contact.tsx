@@ -1,7 +1,7 @@
 
 import React from 'react';
-import Section from './Section.tsx';
-import { PERSONAL_INFO, Icons } from '../constants.tsx';
+import Section from './Section';
+import { PERSONAL_INFO, Icons } from '../constants';
 
 const Contact: React.FC = () => {
     return (

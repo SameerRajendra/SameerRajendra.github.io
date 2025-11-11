@@ -1,7 +1,7 @@
 
 import React from 'react';
-import Section from './Section.tsx';
-import { PROJECTS, Icons } from '../constants.tsx';
+import Section from './Section';
+import { PROJECTS, Icons } from '../constants';
 
 const Projects: React.FC = () => {
     return (
