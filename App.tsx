@@ -1,13 +1,13 @@
 
 import React, { useState, useEffect } from 'react';
-import Header from './components/Header';
-import Hero from './components/Hero';
-import About from './components/About';
-import Experience from './components/Experience';
-import Projects from './components/Projects';
-import Skills from './components/Skills';
-import Education from './components/Education';
-import Contact from './components/Contact';
+import Header from './components/Header.tsx';
+import Hero from './components/Hero.tsx';
+import About from './components/About.tsx';
+import Experience from './components/Experience.tsx';
+import Projects from './components/Projects.tsx';
+import Skills from './components/Skills.tsx';
+import Education from './components/Education.tsx';
+import Contact from './components/Contact.tsx';
 
 const App: React.FC = () => {
     const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });

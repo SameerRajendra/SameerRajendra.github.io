@@ -1,6 +1,6 @@
 import React from 'react';
-import Section from './Section';
-import { EDUCATION } from '../constants';
+import Section from './Section.tsx';
+import { EDUCATION } from '../constants.tsx';
 
 const Education: React.FC = () => {
     return (

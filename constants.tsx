@@ -1,5 +1,5 @@
 import React from 'react';
-import { ExperienceItem, EducationItem, ProjectItem, SkillCategory } from './types';
+import { ExperienceItem, EducationItem, ProjectItem, SkillCategory } from './types.ts';
 
 export const PERSONAL_INFO = {
     name: "Sameer Rajendra",
