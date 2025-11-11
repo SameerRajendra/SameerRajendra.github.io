@@ -52,7 +52,7 @@ export const EDUCATION: EducationItem[] = [
     },
     {
         id: "symbiosis",
-        degree: "Bachelor of Technology - BTech, Mechatronics, Robotics, and Automation Engineering",
+        degree: "Bachelor of Technology - BTech, Mechatronics",
         institution: "Symbiosis Skills & Professional University",
         period: "Aug 2017 - June 2021"
     }
