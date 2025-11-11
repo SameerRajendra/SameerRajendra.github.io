@@ -4,7 +4,7 @@ import { EDUCATION } from '../constants';
 
 const Education: React.FC = () => {
     return (
-        <Section id="education" title="Education" className="bg-card/20 -mx-6 px-6 md:-mx-12 md:px-12 lg:-mx-24 lg:px-24 rounded-3xl">
+        <Section id="education" title="Education" className="bg-card/20 rounded-3xl">
             <div className="space-y-8">
                 {EDUCATION.map((edu) => (
                     <div key={edu.id} className="flex flex-col md:flex-row md:items-center justify-between p-6 bg-darker/50 rounded-xl border-l-4 border-primary">
