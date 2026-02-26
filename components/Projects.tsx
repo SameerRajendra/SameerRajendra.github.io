@@ -45,7 +45,7 @@ const Projects: React.FC = () => {
                                 href={project.link} 
                                 target="_blank" 
                                 rel="noreferrer" 
-                                className="absolute inset-0"
+                                className="absolute inset-0 z-10S"
                                 aria-label={`View project: ${project.title}`}
                             ></a>
                         )}
