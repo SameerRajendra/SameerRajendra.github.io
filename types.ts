@@ -21,6 +21,7 @@ export interface ProjectItem {
     description: string;
     tags: string[];
     link?: string;
+    reportUrl?: string;
 }
 
 export interface SkillCategory {

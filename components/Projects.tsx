@@ -12,13 +12,18 @@ const Projects: React.FC = () => {
                         {/* Hover Gradient Effect */}
                         <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"></div>
 
-                        {/* Header: folder icon */}
-                        <div className="flex justify-between items-start mb-8 relative z-10">
+                        {/* Header: folder icon + report badge */}
+                        <div className="flex justify-between items-start mb-6 relative z-10">
                             <div className="p-3 bg-primary/10 rounded-xl text-primary ring-1 ring-primary/20 group-hover:ring-primary/50 transition-all">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
                                     <path d="M4 20h16a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.93a2 2 0 0 1-1.66-.9l-.82-1.2A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13c0 1.1.9 2 2 2Z"/>
                                 </svg>
                             </div>
+                            {project.reportUrl && (
+                                <span className="text-xs font-mono px-2.5 py-1 rounded-full bg-amber-500/10 text-amber-400 border border-amber-500/20">
+                                    Research Report
+                                </span>
+                            )}
                         </div>
 
                         {/* Title */}
@@ -40,20 +45,33 @@ const Projects: React.FC = () => {
                             ))}
                         </div>
 
-                        {/* GitHub link button — sits above the stretched overlay */}
-                        {project.link && (
-                            <a
-                                href={project.link}
-                                target="_blank"
-                                rel="noreferrer"
-                                className="relative z-20 mt-auto flex items-center gap-2 self-start px-4 py-2 rounded-lg border border-primary/30 text-primary text-sm font-mono hover:bg-primary/10 hover:border-primary transition-all"
-                                aria-label={`View ${project.title} on GitHub`}
-                                onClick={(e) => e.stopPropagation()}
-                            >
-                                <Icons.GitHub className="w-4 h-4" />
-                                View on GitHub
-                            </a>
-                        )}
+                        {/* Action buttons */}
+                        <div className="relative z-20 mt-auto flex flex-wrap gap-3">
+                            {project.link && (
+                                <a
+                                    href={project.link}
+                                    target="_blank"
+                                    rel="noreferrer"
+                                    className="flex items-center gap-2 px-4 py-2 rounded-lg border border-primary/30 text-primary text-sm font-mono hover:bg-primary/10 hover:border-primary transition-all"
+                                    aria-label={`View ${project.title} on GitHub`}
+                                >
+                                    <Icons.GitHub className="w-4 h-4" />
+                                    GitHub
+                                </a>
+                            )}
+                            {project.reportUrl && (
+                                <a
+                                    href={project.reportUrl}
+                                    target="_blank"
+                                    rel="noreferrer"
+                                    className="flex items-center gap-2 px-4 py-2 rounded-lg border border-amber-500/30 text-amber-400 text-sm font-mono hover:bg-amber-500/10 hover:border-amber-400 transition-all"
+                                    aria-label={`Read research report for ${project.title}`}
+                                >
+                                    <Icons.FileText className="w-4 h-4" />
+                                    Read Report
+                                </a>
+                            )}
+                        </div>
                     </div>
                 ))}
             </div>
