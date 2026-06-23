@@ -21,7 +21,7 @@ const Hero: React.FC = () => {
                         I'm a {PERSONAL_INFO.title} specializing in {PERSONAL_INFO.tagline}.
                     </p>
                     <p className="text-lg md:text-xl text-slate-400 mt-2 leading-relaxed">
-                        Currently pursuing my MS in AI at <span className="text-slate-200 font-medium">Stevens Institute of Technology</span>.
+                        MS in Applied AI at <span className="text-slate-200 font-medium">Stevens Institute of Technology</span>.
                     </p>
                 </div>
 
