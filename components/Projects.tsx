@@ -1,18 +1,19 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Section from './Section';
 import { PROJECTS, Icons } from '../constants';
 
 const Projects: React.FC = () => {
+    const [expanded, setExpanded] = useState<string | null>(null);
+
     return (
         <Section id="projects" title="Featured Projects">
             <div className="grid md:grid-cols-2 gap-6">
                 {PROJECTS.map((project) => (
-                    <div key={project.id} className="group relative bg-card/40 hover:bg-card/60 backdrop-blur-sm p-8 rounded-2xl transition-all duration-300 border border-slate-800 hover:border-primary/50 flex flex-col hover:-translate-y-2 overflow-hidden">
+                    <div key={project.id} className="group relative bg-card/40 hover:bg-card/60 backdrop-blur-sm p-8 rounded-2xl transition-all duration-300 border border-slate-800 hover:border-primary/50 flex flex-col overflow-hidden">
 
-                        {/* Hover Gradient Effect */}
                         <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"></div>
 
-                        {/* Header: folder icon */}
+                        {/* Header */}
                         <div className="flex justify-between items-start mb-6 relative z-10">
                             <div className="p-3 bg-primary/10 rounded-xl text-primary ring-1 ring-primary/20 group-hover:ring-primary/50 transition-all">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
@@ -27,9 +28,33 @@ const Projects: React.FC = () => {
                         </h3>
 
                         {/* Description */}
-                        <p className="text-slate-400 mb-6 flex-grow leading-relaxed relative z-10 text-sm">
+                        <p className="text-slate-400 mb-4 leading-relaxed relative z-10 text-sm">
                             {project.description}
                         </p>
+
+                        {/* Expandable bullets */}
+                        {project.bullets && project.bullets.length > 0 && (
+                            <div className="relative z-10 mb-4">
+                                <button
+                                    onClick={() => setExpanded(expanded === project.id ? null : project.id)}
+                                    className="flex items-center gap-1.5 text-xs text-primary/70 hover:text-primary font-mono transition-colors"
+                                    aria-expanded={expanded === project.id}
+                                >
+                                    <Icons.ChevronDown className={`w-3.5 h-3.5 transition-transform duration-200 ${expanded === project.id ? 'rotate-180' : ''}`} />
+                                    {expanded === project.id ? 'Hide details' : 'Show details'}
+                                </button>
+                                {expanded === project.id && (
+                                    <ul className="mt-3 space-y-2">
+                                        {project.bullets.map((b, i) => (
+                                            <li key={i} className="flex gap-2 text-xs text-slate-400 leading-relaxed">
+                                                <span className="text-primary mt-0.5 shrink-0">▸</span>
+                                                <span>{b}</span>
+                                            </li>
+                                        ))}
+                                    </ul>
+                                )}
+                            </div>
+                        )}
 
                         {/* Tags */}
                         <div className="flex flex-wrap gap-2 mb-6 relative z-10">
