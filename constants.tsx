@@ -70,7 +70,8 @@ export const PROJECTS: ProjectItem[] = [
         title: "Adaptive GPU Optimization via Evolutionary Algorithms",
         description: "Automated framework that uses a \u03bc+\u03bb evolutionary algorithm to navigate a complex search space of GPU configs (batch size, precision, CUDA tile sizes, attention kernels) for LLaMA-2-7B on NVIDIA H100, maximizing throughput (tokens/sec) and power efficiency.",
         tags: ["Evolutionary Algorithms", "CUDA", "LLaMA-2", "H100", "FlashAttention", "Python"],
-        link: "https://github.com/SameerRajendra/Adaptive-GPU-Optimization-for-Deep-Learning-Workloads-Using-Evolutionary-Algorithms"
+        link: "https://github.com/SameerRajendra/Adaptive-GPU-Optimization-for-Deep-Learning-Workloads-Using-Evolutionary-Algorithms",
+        reportUrl: "https://raw.githubusercontent.com/SameerRajendra/Adaptive-GPU-Optimization-for-Deep-Learning-Workloads-Using-Evolutionary-Algorithms/main/Sameer_AAI_800_Final_Report.pdf"
     },
     {
         id: "financial-news",
