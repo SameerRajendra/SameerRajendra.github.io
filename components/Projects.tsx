@@ -12,18 +12,13 @@ const Projects: React.FC = () => {
                         {/* Hover Gradient Effect */}
                         <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"></div>
 
-                        {/* Header: folder icon + report badge */}
+                        {/* Header: folder icon */}
                         <div className="flex justify-between items-start mb-6 relative z-10">
                             <div className="p-3 bg-primary/10 rounded-xl text-primary ring-1 ring-primary/20 group-hover:ring-primary/50 transition-all">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
                                     <path d="M4 20h16a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.93a2 2 0 0 1-1.66-.9l-.82-1.2A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13c0 1.1.9 2 2 2Z"/>
                                 </svg>
                             </div>
-                            {project.reportUrl && (
-                                <span className="text-xs font-mono px-2.5 py-1 rounded-full bg-amber-500/10 text-amber-400 border border-amber-500/20">
-                                    Research Report
-                                </span>
-                            )}
                         </div>
 
                         {/* Title */}
