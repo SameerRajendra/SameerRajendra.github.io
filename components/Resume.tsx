@@ -1,6 +1,8 @@
 import React from 'react';
 import { PERSONAL_INFO, EXPERIENCES, EDUCATION, SKILLS } from '../constants';
 
+const RESUME_URL = 'https://raw.githubusercontent.com/SameerRajendra/SameerRajendra.github.io/main/resume.pdf';
+
 const Resume: React.FC = () => {
     return (
         <section id="resume" className="py-24 px-6 md:px-12 lg:px-24 max-w-7xl mx-auto">
@@ -11,8 +13,10 @@ const Resume: React.FC = () => {
                 </h2>
                 <div className="h-px flex-grow bg-slate-800"></div>
                 <a
-                    href="/resume.pdf"
-                    download
+                    href={RESUME_URL}
+                    download="Sameer_Rajendra_Resume.pdf"
+                    target="_blank"
+                    rel="noreferrer"
                     className="group flex items-center gap-2 px-5 py-2.5 border border-primary text-primary rounded font-mono text-sm hover:bg-primary/10 transition-colors whitespace-nowrap"
                     aria-label="Download resume PDF"
                 >
