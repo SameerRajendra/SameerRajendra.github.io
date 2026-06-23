@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { PERSONAL_INFO, Icons } from '../constants';
 
@@ -30,7 +29,10 @@ const Hero: React.FC = () => {
                     <a href="#projects" className="group px-8 py-4 bg-primary text-darker rounded font-bold flex items-center gap-2 cursor-pointer hover:bg-primary/90 transition-all shadow-[0_0_20px_-5px_rgba(6,182,212,0.5)] hover:shadow-[0_0_25px_-5px_rgba(6,182,212,0.7)]">
                         View My Work <Icons.ChevronDown className="w-5 h-5 group-hover:translate-y-1 transition-transform" />
                     </a>
-                    <a href="#contact" className="px-8 py-4 bg-transparent text-primary border-2 border-primary rounded font-bold cursor-pointer hover:bg-primary/10 transition-colors">
+                    <a href="#resume" className="group px-8 py-4 bg-transparent text-primary border-2 border-primary rounded font-bold flex items-center gap-2 cursor-pointer hover:bg-primary/10 transition-colors">
+                        <Icons.Download className="w-5 h-5" /> Resume
+                    </a>
+                    <a href="#contact" className="px-8 py-4 bg-transparent text-slate-300 border border-slate-700 rounded font-bold cursor-pointer hover:border-primary hover:text-primary transition-colors">
                         Get In Touch
                     </a>
                 </div>

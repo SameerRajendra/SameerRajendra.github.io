@@ -7,6 +7,7 @@ import Projects from './components/Projects';
 import Skills from './components/Skills';
 import Education from './components/Education';
 import Contact from './components/Contact';
+import Resume from './components/Resume';
 
 const App: React.FC = () => {
     const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
@@ -40,6 +41,7 @@ const App: React.FC = () => {
                 <Projects />
                 <Skills />
                 <Education />
+                <Resume />
                 <Contact />
             </main>
         </div>
