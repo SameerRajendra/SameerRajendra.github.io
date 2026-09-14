@@ -22,3 +22,8 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Generated per-platform; a Windows-generated lock breaks npm install on the
+# Linux CI runner (npm/cli#4828 - rollup optional binaries). Deploy resolves
+# dependencies fresh on the runner instead.
+package-lock.json
