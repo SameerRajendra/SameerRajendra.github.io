@@ -1,0 +1,112 @@
+.projects-list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-9);
+}
+
+.project__header {
+    margin-bottom: var(--space-4);
+}
+
+.project__title {
+    font-size: var(--fs-4);
+    font-weight: 600;
+    letter-spacing: -0.01em;
+    margin-bottom: var(--space-2);
+}
+
+.project__date,
+.project__context {
+    margin: 0;
+    color: var(--ink-soft);
+    font-size: var(--fs-2);
+}
+
+.project__oneline {
+    font-size: var(--fs-4);
+    color: var(--ink);
+    margin-bottom: var(--space-5);
+}
+
+.project__bullets {
+    margin: 0 0 var(--space-6);
+    padding-left: 1.1em;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+}
+
+.project__bullets li {
+    color: var(--ink-soft);
+}
+
+/* ---- results table: the one place a raised surface + rule belong ---- */
+
+.table-wrap {
+    overflow-x: auto;
+    overflow-y: hidden;
+    margin-bottom: var(--space-5);
+}
+
+.project__results {
+    min-width: 480px;
+}
+
+/* ---- tags: quiet metadata, not chips ---- */
+
+.project__tags {
+    list-style: none;
+    display: flex;
+    flex-wrap: wrap;
+    margin: 0 0 var(--space-4);
+    padding: 0;
+    color: var(--ink-soft);
+    font-size: var(--fs-2);
+}
+
+.project__tags li::after {
+    content: ", ";
+}
+
+.project__tags li:last-child::after {
+    content: "";
+}
+
+/* ---- links: plain, quiet — no button chrome, no arrows ---- */
+
+.project__links {
+    --cluster-gap: var(--space-5);
+}
+
+/* ---- earlier work: compact list, no tables ---- */
+
+.earlier-work {
+    margin-top: var(--space-9);
+    padding-top: var(--space-7);
+}
+
+.earlier-work__heading {
+    font-size: var(--fs-4);
+    font-weight: 600;
+    letter-spacing: -0.01em;
+    margin-bottom: var(--space-5);
+}
+
+.earlier-work__list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-6);
+}
+
+.earlier-work__title {
+    font-weight: 600;
+    margin: 0 0 var(--space-1);
+}
+
+.earlier-work__summary {
+    color: var(--ink-soft);
+    margin: 0 0 var(--space-2);
+}

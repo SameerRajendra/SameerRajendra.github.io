@@ -1,0 +1,21 @@
+.contact__body {
+    color: var(--ink-soft);
+}
+
+.contact__actions {
+    --cluster-gap: var(--space-6);
+    margin-top: var(--space-5);
+}
+
+/* Plain, quiet links — no button chrome, no borders. Rules and raised
+   surfaces are reserved for tabular data elsewhere on the page. */
+.contact__cta {
+    font-size: var(--fs-4);
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 0.15em;
+}
+
+.contact__cta--primary {
+    font-weight: 600;
+}

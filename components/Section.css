@@ -1,0 +1,26 @@
+/* Section.css — the one place that owns section vertical rhythm.
+   Scoped entirely to the .section / .section__* classes so a later
+   element-based rule elsewhere cannot silently cancel it. */
+
+.section {
+    padding-block: var(--space-9);
+}
+
+.section__heading {
+    margin-bottom: var(--space-6);
+}
+
+.section__body {
+    /* Inner layout (stacks, lists, tables) is owned by each section's
+       own component + colocated stylesheet. */
+}
+
+@media (max-width: 600px) {
+    .section {
+        padding-block: var(--space-7);
+    }
+
+    .section__heading {
+        margin-bottom: var(--space-5);
+    }
+}

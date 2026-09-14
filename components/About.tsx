@@ -1,29 +1,55 @@
 import React from 'react';
-import Section from './Section';
 import { PERSONAL_INFO } from '../constants';
-import myPhoto from '../myphoto.jpg';
+import photo from '../myphoto.jpg';
 
 const About: React.FC = () => {
     return (
-        <Section id="about" title="About Me" className="bg-card/30 rounded-3xl my-10">
-            <div className="grid md:grid-cols-3 gap-12 items-center">
-                <div className="md:col-span-2 space-y-6 text-slate-300 leading-relaxed text-lg">
-                    {PERSONAL_INFO.about.map((paragraph, index) => (
-                        <p key={index}>{paragraph}</p>
-                    ))}
-                </div>
-                <div className="relative group mx-auto w-full max-w-[250px] md:max-w-none">
-                    <div className="absolute -inset-1 bg-gradient-to-tr from-primary via-blue-500 to-primary rounded-2xl blur opacity-30 group-hover:opacity-60 transition duration-1000 group-hover:duration-200"></div>
-                    <div className="relative aspect-square rounded-2xl bg-darker border-2 border-slate-800 overflow-hidden group-hover:border-primary/50 transition-colors">
-                        <img
-                            src={myPhoto}
-                            alt="Sameer Rajendra"
-                            className="w-full h-full object-cover object-center"
-                        />
-                    </div>
-                </div>
+        <section id="about" className="about-section">
+            <div className="container about-layout">
+                <p className="measure about-copy">{PERSONAL_INFO.about}</p>
+                <img
+                    src={photo}
+                    alt="Portrait of Sameer Rajendra"
+                    width={280}
+                    height={280}
+                    className="about-photo"
+                />
             </div>
-        </Section>
+
+            <style>{`
+                .about-section {
+                    padding-block: var(--space-8);
+                    border-top: 1px solid var(--rule);
+                }
+                .about-layout {
+                    display: flex;
+                    flex-direction: column-reverse;
+                    gap: var(--space-6);
+                    align-items: flex-start;
+                }
+                .about-copy {
+                    color: var(--ink-soft);
+                    margin: 0;
+                }
+                .about-photo {
+                    width: 140px;
+                    height: 140px;
+                    object-fit: cover;
+                    border-radius: var(--radius);
+                    flex-shrink: 0;
+                }
+                @media (min-width: 700px) {
+                    .about-layout {
+                        flex-direction: row;
+                        align-items: flex-start;
+                    }
+                    .about-photo {
+                        width: 200px;
+                        height: 200px;
+                    }
+                }
+            `}</style>
+        </section>
     );
 };
 

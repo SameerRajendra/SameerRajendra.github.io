@@ -1,0 +1,33 @@
+.education-list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-7);
+}
+
+.education-item__degree {
+    font-size: var(--fs-4);
+    font-weight: 600;
+    letter-spacing: -0.01em;
+    margin-bottom: var(--space-2);
+}
+
+.education-item__institution {
+    margin: 0;
+    color: var(--ink);
+}
+
+.education-item__period {
+    margin: 0 0 var(--space-3);
+    color: var(--ink-soft);
+    font-size: var(--fs-2);
+}
+
+.education-item__coursework {
+    margin: 0;
+    color: var(--ink-soft);
+}
+
+.education-item__coursework-label {
+    color: var(--ink);
+    font-weight: 600;
+}

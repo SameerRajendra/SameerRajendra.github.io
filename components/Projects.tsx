@@ -1,99 +1,93 @@
-import React, { useState } from 'react';
+import React from 'react';
 import Section from './Section';
-import { PROJECTS, Icons } from '../constants';
+import { PROJECTS, EARLIER_WORK } from '../constants';
+import './Projects.css';
 
+/**
+ * Selected work — report entries, not cards. Each entry carries a real
+ * results table (the one place a raised surface + rule hairlines belong)
+ * with the measurement basis always visible as its own column.
+ */
 const Projects: React.FC = () => {
-    const [expanded, setExpanded] = useState<string | null>(null);
-
     return (
-        <Section id="projects" title="Featured Projects">
-            <div className="grid md:grid-cols-2 gap-6">
-                {PROJECTS.map((project) => (
-                    <div key={project.id} className="group relative bg-card/40 hover:bg-card/60 backdrop-blur-sm p-8 rounded-2xl transition-all duration-300 border border-slate-800 hover:border-primary/50 flex flex-col overflow-hidden">
-
-                        <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"></div>
-
-                        {/* Header */}
-                        <div className="flex justify-between items-start mb-6 relative z-10">
-                            <div className="p-3 bg-primary/10 rounded-xl text-primary ring-1 ring-primary/20 group-hover:ring-primary/50 transition-all">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-                                    <path d="M4 20h16a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.93a2 2 0 0 1-1.66-.9l-.82-1.2A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13c0 1.1.9 2 2 2Z"/>
-                                </svg>
-                            </div>
-                        </div>
-
-                        {/* Title */}
-                        <h3 className="text-xl font-bold text-slate-200 mb-3 group-hover:text-primary transition-colors relative z-10">
-                            {project.title}
-                        </h3>
-
-                        {/* Description */}
-                        <p className="text-slate-400 mb-4 leading-relaxed relative z-10 text-sm">
-                            {project.description}
-                        </p>
-
-                        {/* Expandable bullets */}
-                        {project.bullets && project.bullets.length > 0 && (
-                            <div className="relative z-10 mb-4">
-                                <button
-                                    onClick={() => setExpanded(expanded === project.id ? null : project.id)}
-                                    className="flex items-center gap-1.5 text-xs text-primary/70 hover:text-primary font-mono transition-colors"
-                                    aria-expanded={expanded === project.id}
-                                >
-                                    <Icons.ChevronDown className={`w-3.5 h-3.5 transition-transform duration-200 ${expanded === project.id ? 'rotate-180' : ''}`} />
-                                    {expanded === project.id ? 'Hide details' : 'Show details'}
-                                </button>
-                                {expanded === project.id && (
-                                    <ul className="mt-3 space-y-2">
-                                        {project.bullets.map((b, i) => (
-                                            <li key={i} className="flex gap-2 text-xs text-slate-400 leading-relaxed">
-                                                <span className="text-primary mt-0.5 shrink-0">▸</span>
-                                                <span>{b}</span>
-                                            </li>
-                                        ))}
-                                    </ul>
+        <Section id="projects" heading="Selected work">
+            <div className="projects-list">
+                {PROJECTS.map((project) => {
+                    const titleId = `${project.id}-title`;
+                    return (
+                        <article className="project" key={project.id} aria-labelledby={titleId}>
+                            <header className="project__header">
+                                <h3 id={titleId} className="project__title">{project.title}</h3>
+                                <p className="project__date">{project.date}</p>
+                                {project.context && (
+                                    <p className="project__context">{project.context}</p>
                                 )}
+                            </header>
+
+                            <p className="project__oneline measure">{project.oneline}</p>
+
+                            <ul className="project__bullets measure">
+                                {project.bullets.map((bullet, i) => (
+                                    <li key={i}>{bullet}</li>
+                                ))}
+                            </ul>
+
+                            <div className="table-wrap surface">
+                                <table className="project__results">
+                                    <caption className="sr-only">Results for {project.title}</caption>
+                                    <thead>
+                                        <tr>
+                                            <th scope="col">Metric</th>
+                                            <th scope="col">Value</th>
+                                            <th scope="col">Measured against</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {project.results.map((result, i) => (
+                                            <tr key={i}>
+                                                <th scope="row">{result.metric}</th>
+                                                <td className="tabular-nums">{result.value}</td>
+                                                <td>{result.basis}</td>
+                                            </tr>
+                                        ))}
+                                    </tbody>
+                                </table>
                             </div>
-                        )}
 
-                        {/* Tags */}
-                        <div className="flex flex-wrap gap-2 mb-6 relative z-10">
-                            {project.tags.map((tag) => (
-                                <span key={tag} className="text-xs font-mono font-medium text-slate-300 bg-slate-800/80 px-3 py-1.5 rounded-full border border-slate-700/50">
-                                    {tag}
-                                </span>
-                            ))}
-                        </div>
+                            <ul className="project__tags">
+                                {project.tags.map((tag) => (
+                                    <li key={tag}>{tag}</li>
+                                ))}
+                            </ul>
 
-                        {/* Action buttons */}
-                        <div className="relative z-20 mt-auto flex flex-wrap gap-3">
-                            {project.link && (
-                                <a
-                                    href={project.link}
-                                    target="_blank"
-                                    rel="noreferrer"
-                                    className="flex items-center gap-2 px-4 py-2 rounded-lg border border-primary/30 text-primary text-sm font-mono hover:bg-primary/10 hover:border-primary transition-all"
-                                    aria-label={`View ${project.title} on GitHub`}
-                                >
-                                    <Icons.GitHub className="w-4 h-4" />
-                                    GitHub
-                                </a>
-                            )}
-                            {project.reportUrl && (
-                                <a
-                                    href={project.reportUrl}
-                                    target="_blank"
-                                    rel="noreferrer"
-                                    className="flex items-center gap-2 px-4 py-2 rounded-lg border border-amber-500/30 text-amber-400 text-sm font-mono hover:bg-amber-500/10 hover:border-amber-400 transition-all"
-                                    aria-label={`Read research report for ${project.title}`}
-                                >
-                                    <Icons.FileText className="w-4 h-4" />
-                                    Read Report
-                                </a>
-                            )}
-                        </div>
-                    </div>
-                ))}
+                            <div className="cluster project__links">
+                                {project.links.map((link) => (
+                                    <a
+                                        key={link.url}
+                                        href={link.url}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                    >
+                                        {link.label}
+                                    </a>
+                                ))}
+                            </div>
+                        </article>
+                    );
+                })}
+            </div>
+
+            <div className="earlier-work">
+                <h3 className="earlier-work__heading">Earlier work</h3>
+                <ul className="earlier-work__list">
+                    {EARLIER_WORK.map((item) => (
+                        <li key={item.id} className="earlier-work__item">
+                            <p className="earlier-work__title">{item.title}</p>
+                            <p className="earlier-work__summary measure">{item.summary}</p>
+                            <a href={item.url} target="_blank" rel="noopener noreferrer">GitHub</a>
+                        </li>
+                    ))}
+                </ul>
             </div>
         </Section>
     );

@@ -1,0 +1,22 @@
+.award__title {
+    font-size: var(--fs-4);
+    font-weight: 600;
+    letter-spacing: -0.01em;
+    margin-bottom: var(--space-2);
+}
+
+.award__meta,
+.award__organizers {
+    margin: 0;
+    color: var(--ink-soft);
+    font-size: var(--fs-2);
+}
+
+.award__organizers {
+    margin-bottom: var(--space-4);
+}
+
+.award__description {
+    margin: 0;
+    color: var(--ink-soft);
+}

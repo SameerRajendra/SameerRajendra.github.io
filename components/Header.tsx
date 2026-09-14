@@ -1,69 +1,217 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Icons } from '../constants';
 
+// Plain-text contents rail (desktop, >=900px) collapsing to a normal top nav
+// with a hamburger toggle below that. IDs below are the conventional section
+// ids each owning component is expected to render on its own <section>; if a
+// concurrently-built section ever uses a different id, its nav link simply
+// becomes an inert anchor rather than breaking anything.
+const SECTIONS: { id: string; label: string }[] = [
+    { id: 'hero', label: 'Home' },
+    { id: 'focus', label: 'Focus' },
+    { id: 'about', label: 'About' },
+    { id: 'projects', label: 'Selected work' },
+    { id: 'experience', label: 'Experience' },
+    { id: 'skills', label: 'Skills' },
+    { id: 'education', label: 'Education' },
+    { id: 'awards', label: 'Awards' },
+    { id: 'contact', label: 'Contact' },
+];
+
 const Header: React.FC = () => {
-    const [isScrolled, setIsScrolled] = useState(false);
-    const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+    const [activeId, setActiveId] = useState<string>(SECTIONS[0].id);
+    const [mobileOpen, setMobileOpen] = useState(false);
+    const activeIdRef = useRef(activeId);
+    activeIdRef.current = activeId;
 
     useEffect(() => {
-        const handleScroll = () => {
-            setIsScrolled(window.scrollY > 20);
-        };
-        window.addEventListener('scroll', handleScroll);
-        return () => window.removeEventListener('scroll', handleScroll);
+        const elements = SECTIONS.map((s) => document.getElementById(s.id)).filter(
+            (el): el is HTMLElement => el !== null
+        );
+        if (elements.length === 0 || !('IntersectionObserver' in window)) {
+            return;
+        }
+
+        const visible = new Map<string, number>();
+
+        const observer = new IntersectionObserver(
+            (entries) => {
+                entries.forEach((entry) => {
+                    if (entry.isIntersecting) {
+                        visible.set(entry.target.id, entry.intersectionRatio);
+                    } else {
+                        visible.delete(entry.target.id);
+                    }
+                });
+                if (visible.size > 0) {
+                    const [topId] = [...visible.entries()].sort((a, b) => b[1] - a[1])[0];
+                    if (topId !== activeIdRef.current) {
+                        setActiveId(topId);
+                    }
+                }
+            },
+            { rootMargin: '-15% 0px -60% 0px', threshold: [0, 0.25, 0.5, 0.75, 1] }
+        );
+
+        elements.forEach((el) => observer.observe(el));
+        return () => observer.disconnect();
     }, []);
 
-    const navLinks = [
-        { name: 'About', href: '#about' },
-        { name: 'Experience', href: '#experience' },
-        { name: 'Projects', href: '#projects' },
-        { name: 'Skills', href: '#skills' },
-        { name: 'Education', href: '#education' },
-        { name: 'Resume', href: '#resume' },
-        { name: 'Contact', href: '#contact' },
-    ];
+    const closeMobile = () => setMobileOpen(false);
 
     return (
-        <header className={`fixed top-0 w-full z-50 transition-all duration-300 ${isScrolled ? 'bg-darker/90 backdrop-blur-md py-3 shadow-lg shadow-black/20' : 'bg-transparent py-5'}`}>
-            <div className="max-w-7xl mx-auto px-6 md:px-12 flex justify-between items-center">
-                <a href="#hero" className="text-2xl font-bold tracking-tight text-primary font-mono">
-                    SR<span className="text-slate-300">.</span>
+        <header className="site-header">
+            <div className="site-header-bar">
+                <a href="#hero" className="site-brand">
+                    Sameer Rajendra
                 </a>
-
-                {/* Desktop Nav */}
-                <nav className="hidden md:flex space-x-8">
-                    {navLinks.map((link) => (
-                        <a key={link.name} href={link.href} className="text-sm font-medium text-slate-300 hover:text-primary transition-colors">
-                            <span className="text-primary mr-1">#</span>{link.name}
-                        </a>
-                    ))}
-                </nav>
-
-                {/* Mobile Menu Button */}
-                <button 
-                    className="md:hidden text-slate-300 hover:text-primary"
-                    onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-                    aria-label="Toggle menu"
+                <button
+                    type="button"
+                    className="menu-toggle"
+                    aria-expanded={mobileOpen}
+                    aria-controls="mobile-nav"
+                    onClick={() => setMobileOpen((open) => !open)}
                 >
-                    {isMobileMenuOpen ? <Icons.X /> : <Icons.Menu />}
+                    <span className="sr-only">{mobileOpen ? 'Close menu' : 'Open menu'}</span>
+                    {mobileOpen ? <Icons.X width={22} height={22} aria-hidden="true" /> : <Icons.Menu width={22} height={22} aria-hidden="true" />}
                 </button>
             </div>
 
-            {/* Mobile Nav */}
-            {isMobileMenuOpen && (
-                <nav className="md:hidden absolute top-full left-0 w-full bg-card/95 backdrop-blur-md border-b border-slate-800 py-4 px-6 flex flex-col space-y-4 shadow-2xl">
-                    {navLinks.map((link) => (
-                        <a 
-                            key={link.name} 
-                            href={link.href} 
-                            className="text-base font-medium text-slate-200 hover:text-primary py-2 border-b border-slate-800/50"
-                            onClick={() => setIsMobileMenuOpen(false)}
-                        >
-                             <span className="text-primary mr-2">#</span>{link.name}
-                        </a>
+            <nav id="mobile-nav" className="mobile-nav" aria-label="Section navigation" hidden={!mobileOpen}>
+                <ul>
+                    {SECTIONS.map((s) => (
+                        <li key={s.id}>
+                            <a
+                                href={`#${s.id}`}
+                                aria-current={activeId === s.id ? 'true' : undefined}
+                                onClick={closeMobile}
+                            >
+                                {s.label}
+                            </a>
+                        </li>
                     ))}
-                </nav>
-            )}
+                </ul>
+            </nav>
+
+            <nav className="rail-nav" aria-label="Table of contents">
+                <ul>
+                    {SECTIONS.map((s) => (
+                        <li key={s.id} className={activeId === s.id ? 'is-active' : undefined}>
+                            <a href={`#${s.id}`} aria-current={activeId === s.id ? 'true' : undefined}>
+                                {s.label}
+                            </a>
+                        </li>
+                    ))}
+                </ul>
+            </nav>
+
+            <style>{`
+                .site-header-bar {
+                    position: sticky;
+                    top: 0;
+                    z-index: 50;
+                    display: flex;
+                    align-items: center;
+                    justify-content: space-between;
+                    gap: var(--space-4);
+                    padding: var(--space-3) var(--space-4);
+                    background: var(--ground);
+                    border-bottom: 1px solid var(--rule);
+                }
+                .site-brand {
+                    color: var(--ink);
+                    text-decoration: none;
+                    font-weight: 600;
+                    font-size: var(--fs-3);
+                }
+                .menu-toggle {
+                    min-width: 44px;
+                    min-height: 44px;
+                    display: inline-flex;
+                    align-items: center;
+                    justify-content: center;
+                    background: transparent;
+                    border: 1px solid var(--rule);
+                    border-radius: var(--radius);
+                    color: var(--ink);
+                    cursor: pointer;
+                }
+
+                .mobile-nav {
+                    position: sticky;
+                    top: 60px;
+                    z-index: 49;
+                    background: var(--surface);
+                    border-bottom: 1px solid var(--rule);
+                }
+                .mobile-nav ul {
+                    list-style: none;
+                    margin: 0;
+                    padding: var(--space-3) var(--space-4);
+                    display: flex;
+                    flex-direction: column;
+                    gap: var(--space-1);
+                }
+                .mobile-nav a {
+                    display: block;
+                    padding: var(--space-3) 0;
+                    color: var(--ink-soft);
+                    text-decoration: none;
+                    font-size: var(--fs-3);
+                }
+                .mobile-nav a[aria-current="true"] {
+                    color: var(--ink);
+                }
+
+                .rail-nav {
+                    display: none;
+                }
+
+                @media (min-width: 900px) {
+                    .site-header-bar,
+                    .mobile-nav {
+                        display: none;
+                    }
+                    body {
+                        padding-left: 200px;
+                    }
+                    .rail-nav {
+                        display: block;
+                        position: fixed;
+                        left: var(--space-6);
+                        top: 50%;
+                        transform: translateY(-50%);
+                        width: 150px;
+                        z-index: 40;
+                    }
+                    .rail-nav ul {
+                        list-style: none;
+                        margin: 0;
+                        padding: 0;
+                        display: flex;
+                        flex-direction: column;
+                        gap: var(--space-3);
+                    }
+                    .rail-nav li {
+                        border-left: 2px solid transparent;
+                        padding-left: var(--space-3);
+                    }
+                    .rail-nav li.is-active {
+                        border-left-color: var(--signal);
+                    }
+                    .rail-nav a {
+                        color: var(--ink-soft);
+                        text-decoration: none;
+                        font-size: var(--fs-2);
+                    }
+                    .rail-nav li.is-active a {
+                        color: var(--ink);
+                    }
+                    .rail-nav a:hover {
+                        color: var(--ink);
+                    }
+                }
+            `}</style>
         </header>
     );
 };
