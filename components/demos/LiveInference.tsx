@@ -1,5 +1,4 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
-import Section from '../Section';
 // Type-only import: erased entirely at compile time (tsconfig has
 // isolatedModules: true, so this is guaranteed to produce zero runtime
 // code and zero bundle/prerender side effects). The actual library is
@@ -294,7 +293,7 @@ const LiveInference: React.FC = () => {
     );
 
     return (
-        <Section id="live-inference" heading="Run a model in this tab">
+        <>
             <p className="li-intro measure">
                 This runs <span className="mono">{MODEL_ID}</span>, a small, off-the-shelf sentiment classifier,
                 entirely in your browser — no server call, nothing sent anywhere. It is not the GPT-Neo model
@@ -453,7 +452,7 @@ const LiveInference: React.FC = () => {
                     </div>
                 )}
             </div>
-        </Section>
+        </>
     );
 };
 

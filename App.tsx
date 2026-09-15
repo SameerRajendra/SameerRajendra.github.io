@@ -23,9 +23,10 @@ import { useInView } from './hooks/useInView';
 // (which queries document.getElementById once on mount) — only the
 // interactive calculator inside it is deferred.
 //
-// Live inference (owned by a concurrent agent) renders its OWN <Section
-// id="live-inference">, so no extra <Section> is added here — that would
-// duplicate the heading. It is still mounted through DeferredDemo (not a
+// Live inference is wrapped in an eager <Section id="live-inference"> here,
+// like the KV explorer: the id and h2 must exist on first paint or the
+// contents-rail anchor resolves to nothing and Header's one-shot
+// getElementById never finds it. It is mounted through DeferredDemo (not a
 // bare <Suspense>): legacy renderToString cannot wait on a React.lazy
 // import, so an eagerly-rendered Suspense boundary around it breaks
 // prerender (it emits a broken internal error marker, exposing a local
@@ -133,9 +134,11 @@ const App: React.FC = () => {
                     </DeferredDemo>
                 </Section>
 
-                <DeferredDemo minHeight={560}>
-                    <LiveInference />
-                </DeferredDemo>
+                <Section id="live-inference" heading="Run a model in this tab">
+                    <DeferredDemo minHeight={560}>
+                        <LiveInference />
+                    </DeferredDemo>
+                </Section>
 
                 <Experience />
                 <Skills />
