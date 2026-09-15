@@ -1,0 +1,305 @@
+/* ==========================================================================
+   FOCUS VISUALS — shared styles for the three "What I work on" diagrams
+   (KvHeadDiagram, AgentGraphDiagram, ScorecardDiagram).
+
+   Each diagram is hand-built inline SVG. No animation library. Transform
+   and opacity only (plus stroke-dashoffset for line-drawing, matching the
+   precedent already set by KernelChart.tsx elsewhere in this codebase).
+
+   PLAY/PAUSE MODEL:
+   - Every animated element carries `.fv-anim`. It is paused by default and
+     only runs while its `.fv-diagram` root also carries `.is-playing`
+     (set by the component from `active && inView`, both gated on JS/DOM
+     APIs being available at all).
+   - Paused-at-rest (no JS, not yet scrolled in, or the inactive side of a
+     cross-fade) always lands on each element's own default declared
+     opacity below — chosen to equal each keyframe's 0% frame, so "paused"
+     and "not started yet" look identical to "mid-animation, frame one".
+
+   REDUCED MOTION:
+   - Components compute `prefers-reduced-motion` once in JS and add
+     `.is-reduced` to the root, which is enough on its own to render the
+     final, most-informative static frame (see the two-phase rules below).
+   - This stylesheet also carries an unconditional `@media` block as a
+     second guard, consistent with styles/motion.css and Focus.css.
+   ========================================================================== */
+
+.fv-diagram {
+    width: 100%;
+    max-width: 440px;
+    margin-inline: auto;
+}
+
+/* In the pinned stage the diagram shares a 100vh frame with a short paragraph,
+   so a 440px figure leaves the frame looking empty. Let it grow with the
+   viewport there, capped so it never outgrows its column or the frame height. */
+@media (min-width: 900px) {
+    .focus-panel__visual .fv-diagram {
+        max-width: min(620px, 100%);
+    }
+}
+
+.fv-svg {
+    width: 100%;
+    height: auto;
+    overflow: visible;
+}
+
+.fv-band {
+    fill: var(--surface);
+    stroke: var(--rule);
+    stroke-width: 1;
+}
+
+.fv-box {
+    fill: var(--surface);
+    stroke: var(--baseline);
+    stroke-width: 1.25;
+}
+
+.fv-line-idle {
+    stroke: var(--baseline);
+    stroke-width: 1.25;
+    fill: none;
+}
+
+.fv-line-flow {
+    stroke: var(--signal);
+    stroke-width: 1.5;
+    fill: none;
+}
+
+.fv-label {
+    font-family: var(--font-mono);
+    font-size: 9px;
+    fill: var(--ink-soft);
+}
+
+.fv-label--strong {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    font-weight: 600;
+    fill: var(--ink);
+}
+
+.fv-label--signal {
+    fill: var(--signal);
+}
+
+.fv-label--verify {
+    fill: var(--verify);
+}
+
+/* -------------------------- Animation gating ----------------------------- */
+
+@media (scripting: enabled) {
+    .fv-anim {
+        animation-play-state: paused;
+    }
+
+    .fv-diagram.is-playing .fv-anim {
+        animation-play-state: running;
+    }
+}
+
+/* Two-phase cross-fade: "a" is the naive/pending/idle state, "b" is the
+   resolved/optimized/final state. Defaults (no JS, animation paused at
+   frame one) show phase a — the thing being improved on — except where a
+   component overrides this per-instance because its final state is more
+   informative at rest (see each component's own comments). */
+.fv-toggle-a {
+    opacity: 1;
+}
+
+.fv-toggle-b {
+    opacity: 0;
+}
+
+/* A dot travelling a straight edge. Transient by nature: under reduced
+   motion there is no meaningful static form, so it simply never renders. */
+.fv-pulse {
+    opacity: 0;
+}
+
+/* The deliberately-never-resolving element (the scorecard's "not yet run"
+   status). Always visible, distinct from both a pass and a blank cell. */
+.fv-pending-persistent {
+    opacity: 1;
+}
+
+/* --------------------------- Reduced motion ------------------------------- */
+
+@media (prefers-reduced-motion: reduce) {
+    .fv-anim {
+        animation: none !important;
+    }
+
+    .fv-toggle-a {
+        opacity: 0 !important;
+    }
+
+    .fv-toggle-b {
+        opacity: 1 !important;
+    }
+
+    .fv-pulse {
+        opacity: 0 !important;
+        display: none !important;
+    }
+
+    .fv-pending-persistent {
+        opacity: 1 !important;
+    }
+}
+
+/* ============================== KV heads ================================= */
+
+.fv-kv-arrow {
+    marker-end: url(#fv-kv-arrowhead);
+}
+
+.fv-kv-arrowhead-fill {
+    fill: var(--signal);
+}
+
+.fv-kv-junction {
+    fill: var(--signal);
+}
+
+.fv-kv-branch {
+    stroke: var(--signal);
+    stroke-width: 1;
+    opacity: 0.6;
+}
+
+@keyframes fv-kv-fade-a {
+    0%, 42% { opacity: 1; }
+    50%, 100% { opacity: 0; }
+}
+
+@keyframes fv-kv-fade-b {
+    0%, 42% { opacity: 0; }
+    50%, 100% { opacity: 1; }
+}
+
+.fv-kv-phase-a {
+    animation: fv-kv-fade-a 7s var(--ease-in-out, ease) infinite;
+}
+
+.fv-kv-phase-b {
+    animation: fv-kv-fade-b 7s var(--ease-in-out, ease) infinite;
+}
+
+/* ============================= Agent graph ================================ */
+
+@keyframes fv-graph-activate {
+    0%, 6% { opacity: 0; }
+    16%, 78% { opacity: 1; }
+    92%, 100% { opacity: 0; }
+}
+
+@keyframes fv-graph-pulse {
+    0% { opacity: 0; transform: translate(var(--fv-x1), var(--fv-y1)); }
+    3% { opacity: 1; }
+    13% { opacity: 1; transform: translate(var(--fv-x2), var(--fv-y2)); }
+    16%, 100% { opacity: 0; transform: translate(var(--fv-x2), var(--fv-y2)); }
+}
+
+.fv-graph-node-active {
+    animation-name: fv-graph-activate;
+    animation-duration: 6s;
+    animation-timing-function: var(--ease-in-out, ease);
+    animation-iteration-count: infinite;
+}
+
+.fv-graph-pulse {
+    animation-name: fv-graph-pulse;
+    animation-duration: 6s;
+    animation-timing-function: linear;
+    animation-iteration-count: infinite;
+}
+
+.fv-graph-active-outline {
+    fill: color-mix(in srgb, var(--signal) 16%, transparent);
+    stroke: var(--signal);
+    stroke-width: 1.5;
+}
+
+.fv-graph-degraded-outline {
+    fill: none;
+    stroke: var(--baseline);
+    stroke-width: 1.5;
+    stroke-dasharray: 4 3;
+}
+
+.fv-graph-verify-outline {
+    fill: color-mix(in srgb, var(--verify) 16%, transparent);
+    stroke: var(--verify);
+    stroke-width: 1.5;
+}
+
+/* ============================== Scorecard ================================= */
+
+/* Each row's stagger comes from animation-delay on this shared keyframe
+   pair (phase-shifting a repeating loop), not from per-row keyframes — see
+   ScorecardDiagram.tsx. */
+
+@keyframes fv-score-resolve-out {
+    0%, 38% { opacity: 1; }
+    46%, 100% { opacity: 0; }
+}
+
+@keyframes fv-score-resolve-in {
+    0%, 38% { opacity: 0; }
+    46%, 100% { opacity: 1; }
+}
+
+@keyframes fv-score-pulse-persistent {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.55; }
+}
+
+.fv-score-cell-a {
+    animation-name: fv-score-resolve-out;
+    animation-duration: 7s;
+    animation-timing-function: var(--ease-in-out, ease);
+    animation-iteration-count: infinite;
+}
+
+.fv-score-cell-b {
+    animation-name: fv-score-resolve-in;
+    animation-duration: 7s;
+    animation-timing-function: var(--ease-in-out, ease);
+    animation-iteration-count: infinite;
+}
+
+.fv-score-pending-loop {
+    animation-name: fv-score-pulse-persistent;
+    animation-duration: 2.4s;
+    animation-timing-function: var(--ease-in-out, ease);
+    animation-iteration-count: infinite;
+}
+
+.fv-score-rule {
+    stroke: var(--rule);
+    stroke-width: 1;
+}
+
+.fv-score-ring--verify {
+    fill: color-mix(in srgb, var(--verify) 14%, transparent);
+    stroke: var(--verify);
+    stroke-width: 1.5;
+}
+
+.fv-score-ring--solid {
+    fill: var(--surface);
+    stroke: var(--ink-soft);
+    stroke-width: 1.5;
+}
+
+.fv-score-ring--dashed {
+    fill: var(--surface);
+    stroke: var(--ink-soft);
+    stroke-width: 1.5;
+    stroke-dasharray: 3 2.5;
+}

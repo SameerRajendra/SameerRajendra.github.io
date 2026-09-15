@@ -2,7 +2,19 @@ import React, { useEffect, useRef, useState } from 'react';
 import Section from './Section';
 import Reveal from './Reveal';
 import { FOCUS_AREAS } from '../constants';
+import KvHeadDiagram from './focus-visuals/KvHeadDiagram';
+import AgentGraphDiagram from './focus-visuals/AgentGraphDiagram';
+import ScorecardDiagram from './focus-visuals/ScorecardDiagram';
 import './Focus.css';
+
+// Each focus area gets a live diagram of the mechanism its own paragraph
+// describes, rather than generic decoration — see FOCUS-VISUALS-SPEC. Keyed
+// by id so a reorder in constants.tsx can't silently mismatch a diagram.
+const DIAGRAMS: Record<string, React.ComponentType<{ active?: boolean }>> = {
+    'inference-and-gpu': KvHeadDiagram,
+    'agents-and-retrieval': AgentGraphDiagram,
+    evaluation: ScorecardDiagram,
+};
 
 /**
  * "What I work on" — the pinned scroll sequence.
@@ -67,18 +79,26 @@ const Focus: React.FC = () => {
         return (
             <Section id="focus" heading="What I work on">
                 <div className="focus-list">
-                    {FOCUS_AREAS.map((area, i) => (
-                        <Reveal
-                            as="article"
-                            key={area.id}
-                            variant="up"
-                            delay={i * 80}
-                            className="focus-item measure"
-                        >
-                            <h3 className="focus-item__heading">{area.heading}</h3>
-                            <p>{area.body}</p>
-                        </Reveal>
-                    ))}
+                    {FOCUS_AREAS.map((area, i) => {
+                        const Diagram = DIAGRAMS[area.id];
+                        return (
+                            <Reveal
+                                as="article"
+                                key={area.id}
+                                variant="up"
+                                delay={i * 80}
+                                className="focus-item measure"
+                            >
+                                <h3 className="focus-item__heading">{area.heading}</h3>
+                                <p>{area.body}</p>
+                                {Diagram && (
+                                    <div className="focus-item__visual">
+                                        <Diagram />
+                                    </div>
+                                )}
+                            </Reveal>
+                        );
+                    })}
                 </div>
             </Section>
         );
@@ -88,16 +108,27 @@ const Focus: React.FC = () => {
         <Section id="focus" heading="What I work on">
             <div className="focus-track">
                 <div className="focus-stage">
-                    {FOCUS_AREAS.map((area, i) => (
-                        <article
-                            className={`focus-panel measure${i === activeIndex ? ' is-active' : ''}`}
-                            key={area.id}
-                            aria-hidden={i === activeIndex ? undefined : true}
-                        >
-                            <h3 className="focus-item__heading">{area.heading}</h3>
-                            <p>{area.body}</p>
-                        </article>
-                    ))}
+                    {FOCUS_AREAS.map((area, i) => {
+                        const Diagram = DIAGRAMS[area.id];
+                        const isActive = i === activeIndex;
+                        return (
+                            <article
+                                className={`focus-panel${isActive ? ' is-active' : ''}`}
+                                key={area.id}
+                                aria-hidden={isActive ? undefined : true}
+                            >
+                                <div className="focus-panel__text measure">
+                                    <h3 className="focus-item__heading">{area.heading}</h3>
+                                    <p>{area.body}</p>
+                                </div>
+                                {Diagram && (
+                                    <div className="focus-panel__visual">
+                                        <Diagram active={isActive} />
+                                    </div>
+                                )}
+                            </article>
+                        );
+                    })}
 
                     <div className="focus-progress" aria-hidden="true">
                         {FOCUS_AREAS.map((area, i) => (
