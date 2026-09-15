@@ -52,6 +52,31 @@
     min-width: 480px;
 }
 
+/* rows cascade in via .stagger + --i (set inline per row in Projects.tsx);
+   hover and keyboard focus both lift the row and nudge the metric name. */
+.project__results tbody tr {
+    transition: background-color 200ms var(--ease-in-out, cubic-bezier(0.65, 0, 0.35, 1));
+}
+
+.project__results tbody tr:hover,
+.project__results tbody tr:focus-within {
+    background-color: color-mix(in srgb, var(--ink) 6%, transparent);
+}
+
+.project__results tbody th {
+    transition: transform 200ms var(--ease-in-out, cubic-bezier(0.65, 0, 0.35, 1));
+}
+
+.project__results tbody tr:hover th,
+.project__results tbody tr:focus-within th {
+    transform: translateX(2px);
+}
+
+.project__results tbody tr:focus-visible {
+    outline: 2px solid var(--signal);
+    outline-offset: -2px;
+}
+
 /* ---- tags: quiet metadata, not chips ---- */
 
 .project__tags {
@@ -72,10 +97,37 @@
     content: "";
 }
 
-/* ---- links: plain, quiet — no button chrome, no arrows ---- */
+/* ---- links: plain, quiet — no button chrome, no arrows. An underline
+   wipes in from the left on hover and keyboard focus alike (also used by
+   the "Earlier work" GitHub links below). ---- */
 
 .project__links {
     --cluster-gap: var(--space-5);
+}
+
+.project__link {
+    position: relative;
+    display: inline-block;
+    color: var(--signal);
+    text-decoration: none;
+}
+
+.project__link::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: -0.15em;
+    height: 1px;
+    background: currentColor;
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 200ms var(--ease-in-out, cubic-bezier(0.65, 0, 0.35, 1));
+}
+
+.project__link:hover::after,
+.project__link:focus-visible::after {
+    transform: scaleX(1);
 }
 
 /* ---- earlier work: compact list, no tables ---- */

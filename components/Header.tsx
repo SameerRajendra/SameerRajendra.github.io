@@ -23,6 +23,8 @@ const Header: React.FC = () => {
     const [mobileOpen, setMobileOpen] = useState(false);
     const activeIdRef = useRef(activeId);
     activeIdRef.current = activeId;
+    const railNavRef = useRef<HTMLElement>(null);
+    const [indicatorStyle, setIndicatorStyle] = useState<React.CSSProperties>({ opacity: 0 });
 
     useEffect(() => {
         const elements = SECTIONS.map((s) => document.getElementById(s.id)).filter(
@@ -56,6 +58,33 @@ const Header: React.FC = () => {
         elements.forEach((el) => observer.observe(el));
         return () => observer.disconnect();
     }, []);
+
+    // Sliding active-item indicator (motion spec #5): rather than the old
+    // per-item border-color snap, one bar translates between list items.
+    // Measured via getBoundingClientRect rather than assumed row heights,
+    // since "Selected work" can wrap to two lines on a narrow rail while
+    // single-word labels don't. Only ever writes a transform (+ a one-time
+    // height on change, not itself transitioned), so the animated property
+    // stays within the transform/opacity budget.
+    useEffect(() => {
+        const measure = () => {
+            const nav = railNavRef.current;
+            if (!nav) return;
+            const activeLi = nav.querySelector<HTMLLIElement>(`li[data-id="${activeId}"]`);
+            if (!activeLi) return;
+            const navRect = nav.getBoundingClientRect();
+            const itemRect = activeLi.getBoundingClientRect();
+            if (itemRect.height === 0) return;
+            setIndicatorStyle({
+                opacity: 1,
+                transform: `translateY(${itemRect.top - navRect.top}px)`,
+                height: itemRect.height,
+            });
+        };
+        measure();
+        window.addEventListener('resize', measure, { passive: true });
+        return () => window.removeEventListener('resize', measure);
+    }, [activeId]);
 
     const closeMobile = () => setMobileOpen(false);
 
@@ -93,10 +122,11 @@ const Header: React.FC = () => {
                 </ul>
             </nav>
 
-            <nav className="rail-nav" aria-label="Table of contents">
+            <nav className="rail-nav" aria-label="Table of contents" ref={railNavRef}>
+                <span className="rail-indicator" style={indicatorStyle} aria-hidden="true" />
                 <ul>
                     {SECTIONS.map((s) => (
-                        <li key={s.id} className={activeId === s.id ? 'is-active' : undefined}>
+                        <li key={s.id} data-id={s.id} className={activeId === s.id ? 'is-active' : undefined}>
                             <a href={`#${s.id}`} aria-current={activeId === s.id ? 'true' : undefined}>
                                 {s.label}
                             </a>
@@ -123,6 +153,13 @@ const Header: React.FC = () => {
                     text-decoration: none;
                     font-weight: 600;
                     font-size: var(--fs-3);
+                    display: inline-block;
+                    transition: color 200ms var(--ease-in-out, ease), transform 200ms var(--ease-in-out, ease);
+                }
+                .site-brand:hover,
+                .site-brand:focus-visible {
+                    color: var(--signal);
+                    transform: translateX(2px);
                 }
                 .menu-toggle {
                     min-width: 44px;
@@ -135,6 +172,14 @@ const Header: React.FC = () => {
                     border-radius: var(--radius);
                     color: var(--ink);
                     cursor: pointer;
+                    transition: color 200ms var(--ease-in-out, ease), border-color 200ms var(--ease-in-out, ease),
+                        transform 200ms var(--ease-in-out, ease);
+                }
+                .menu-toggle:hover,
+                .menu-toggle:focus-visible {
+                    color: var(--signal);
+                    border-color: var(--signal);
+                    transform: scale(1.04);
                 }
 
                 .mobile-nav {
@@ -158,8 +203,13 @@ const Header: React.FC = () => {
                     color: var(--ink-soft);
                     text-decoration: none;
                     font-size: var(--fs-3);
+                    transition: color 200ms var(--ease-in-out, ease);
                 }
                 .mobile-nav a[aria-current="true"] {
+                    color: var(--ink);
+                }
+                .mobile-nav a:hover,
+                .mobile-nav a:focus-visible {
                     color: var(--ink);
                 }
 
@@ -185,6 +235,7 @@ const Header: React.FC = () => {
                         z-index: 40;
                     }
                     .rail-nav ul {
+                        position: relative;
                         list-style: none;
                         margin: 0;
                         padding: 0;
@@ -196,19 +247,40 @@ const Header: React.FC = () => {
                         border-left: 2px solid transparent;
                         padding-left: var(--space-3);
                     }
-                    .rail-nav li.is-active {
-                        border-left-color: var(--signal);
+                    /* The active state itself is carried by .rail-indicator sliding
+                       between items (motion spec #5); the border above only reserves
+                       the gutter it slides through. */
+                    .rail-indicator {
+                        position: absolute;
+                        left: 0;
+                        top: 0;
+                        width: 2px;
+                        background: var(--signal);
+                        opacity: 0;
+                        transition: transform var(--dur-base, 650ms) var(--ease-in-out, ease),
+                            opacity var(--dur-fast, 400ms) ease;
+                        will-change: transform;
                     }
                     .rail-nav a {
+                        display: inline-block;
                         color: var(--ink-soft);
                         text-decoration: none;
                         font-size: var(--fs-2);
+                        transition: color 200ms var(--ease-in-out, ease), transform 200ms var(--ease-in-out, ease);
                     }
                     .rail-nav li.is-active a {
                         color: var(--ink);
                     }
-                    .rail-nav a:hover {
+                    .rail-nav a:hover,
+                    .rail-nav a:focus-visible {
                         color: var(--ink);
+                        transform: translateX(2px);
+                    }
+                }
+
+                @media (prefers-reduced-motion: reduce) {
+                    .rail-indicator {
+                        transition: none !important;
                     }
                 }
             `}</style>

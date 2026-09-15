@@ -1,18 +1,21 @@
 import React from 'react';
 import { PERSONAL_INFO } from '../constants';
 import photo from '../myphoto.jpg';
+import Reveal from './Reveal';
 
 const About: React.FC = () => {
     return (
         <section id="about" className="about-section">
             <div className="container about-layout">
-                <p className="measure about-copy">{PERSONAL_INFO.about}</p>
+                <Reveal as="p" className="measure about-copy">
+                    {PERSONAL_INFO.about}
+                </Reveal>
                 <img
                     src={photo}
                     alt="Portrait of Sameer Rajendra"
                     width={280}
                     height={280}
-                    className="about-photo"
+                    className="about-photo parallax"
                 />
             </div>
 

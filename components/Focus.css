@@ -1,3 +1,8 @@
+/* ---- Baseline / degraded: plain stacked list -----------------------------
+   This is what renders under prefers-reduced-motion, below 900px, and for
+   any visitor without JS (the server-rendered markup — see Focus.tsx). No
+   pinning, no fixed heights, nothing tall to scroll through by accident. */
+
 .focus-list {
     display: flex;
     flex-direction: column;
@@ -11,7 +16,123 @@
     margin-bottom: var(--space-3);
 }
 
-.focus-item p {
+.focus-item p,
+.focus-panel p {
     margin: 0;
     color: var(--ink-soft);
+}
+
+/* ---- Pinned sequence -------------------------------------------------
+   Only ever rendered once JS has confirmed: motion is allowed AND the
+   viewport is >= 900px (see the width media query below, which is a second,
+   CSS-level guard against the same conditions). */
+
+.focus-track {
+    position: relative;
+}
+
+.focus-stage {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-7);
+}
+
+.focus-panel {
+    opacity: 1;
+    transform: none;
+}
+
+.focus-progress,
+.focus-sentinel {
+    display: none;
+}
+
+@media (min-width: 900px) {
+    .focus-track {
+        height: 300vh;
+    }
+
+    .focus-stage {
+        position: sticky;
+        top: 0;
+        height: 100vh;
+        display: block;
+    }
+
+    .focus-panel {
+        position: absolute;
+        inset: 0;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        opacity: 0;
+        transform: translate3d(0, 24px, 0);
+        transition:
+            opacity var(--dur-base, 650ms) var(--ease-out-expo, cubic-bezier(0.16, 1, 0.3, 1)),
+            transform var(--dur-base, 650ms) var(--ease-out-expo, cubic-bezier(0.16, 1, 0.3, 1));
+        will-change: opacity, transform;
+    }
+
+    .focus-panel.is-active {
+        opacity: 1;
+        transform: none;
+    }
+
+    .focus-progress {
+        display: flex;
+        gap: var(--space-3);
+        position: absolute;
+        left: 0;
+        bottom: var(--space-7);
+    }
+
+    .focus-progress__dot {
+        width: 28px;
+        height: 2px;
+        background: var(--rule);
+        transition: background-color var(--dur-fast, 400ms) var(--ease-in-out, cubic-bezier(0.65, 0, 0.35, 1));
+    }
+
+    .focus-progress__dot.is-active {
+        background: var(--signal);
+    }
+
+    .focus-sentinel {
+        display: block;
+        position: absolute;
+        top: calc(var(--index, 0) * 33.333%);
+        left: 0;
+        width: 1px;
+        height: 33.334%;
+        pointer-events: none;
+    }
+}
+
+/* Belt-and-suspenders: if the pinned markup is ever present while reduced
+   motion is on, collapse it to the same plain stacked layout instantly. */
+@media (prefers-reduced-motion: reduce) {
+    .focus-track {
+        height: auto;
+        position: static;
+    }
+
+    .focus-stage {
+        position: static;
+        height: auto;
+        display: flex;
+        flex-direction: column;
+        gap: var(--space-7);
+    }
+
+    .focus-panel {
+        position: static;
+        opacity: 1;
+        transform: none;
+        transition: none;
+    }
+
+    .focus-progress,
+    .focus-sentinel {
+        display: none;
+    }
 }

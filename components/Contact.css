@@ -7,13 +7,38 @@
     margin-top: var(--space-5);
 }
 
-/* Plain, quiet links — no button chrome, no borders. Rules and raised
-   surfaces are reserved for tabular data elsewhere on the page. */
+/* Plain, quiet links — no button chrome, no borders, no arrows. The
+   underline wipes in from the left and the text shifts 2px on hover and
+   keyboard focus alike (:focus-visible gets the same feedback as :hover). */
 .contact__cta {
+    position: relative;
+    display: inline-block;
     font-size: var(--fs-4);
-    text-decoration: underline;
-    text-decoration-thickness: 1px;
-    text-underline-offset: 0.15em;
+    text-decoration: none;
+    transition: transform 200ms var(--ease-in-out, cubic-bezier(0.65, 0, 0.35, 1));
+}
+
+.contact__cta::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: -0.15em;
+    height: 1px;
+    background: currentColor;
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 200ms var(--ease-in-out, cubic-bezier(0.65, 0, 0.35, 1));
+}
+
+.contact__cta:hover,
+.contact__cta:focus-visible {
+    transform: translateX(2px);
+}
+
+.contact__cta:hover::after,
+.contact__cta:focus-visible::after {
+    transform: scaleX(1);
 }
 
 .contact__cta--primary {
