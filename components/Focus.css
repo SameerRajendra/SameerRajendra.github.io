@@ -67,6 +67,30 @@
 @media (min-width: 900px) {
     .focus-track {
         height: 300vh;
+        /* Fix for the ~160px dead-space gap: Section.css gives every section
+           var(--space-9) of top padding, and the pinned heading just above
+           (below) adds its own box height on top of that — together, at the
+           moment #focus is first anchored, that is roughly the heading's
+           rendered height plus that padding sitting above the stage before
+           any extra scroll has happened, i.e. before position: sticky has
+           anything to engage against. The stage's static resting position
+           starts that far down, so its bottom is clipped by the same amount
+           and the top of the viewport shows blank padding instead of the
+           pinned panel. Cancelling the section's own top padding (below)
+           handles that half; this negative margin cancels the heading's own
+           box height so the stage lands flush with the viewport top
+           immediately, with the still-sticky heading painted over its top
+           edge exactly as it does for the rest of the pinned sequence. */
+        margin-top: calc(-1 * (var(--fs-5) * var(--lh-heading) + var(--space-4) * 2 + 1px));
+    }
+
+    /* The other half of the same fix: remove the section's own top padding
+       for #focus only, so the pinned heading (and the stage above) start at
+       the section's true top edge instead of var(--space-9) below it.
+       Bottom padding is untouched, so spacing to the next section (About)
+       does not change. */
+    #focus.section {
+        padding-top: 0;
     }
 
     .focus-stage {

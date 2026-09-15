@@ -1,0 +1,262 @@
+/* LiveInference.css — in-browser inference demo.
+   Reuses only existing tokens from styles/global.css (no new colors).
+   Motion here is decorative only (progress-bar width, button hover lift);
+   the sitewide prefers-reduced-motion rule in styles/global.css already
+   zeroes every transition/animation duration, so nothing here needs its
+   own reduced-motion override to remain correct. */
+
+.li-intro {
+    color: var(--ink-soft);
+    margin-bottom: var(--space-6);
+}
+
+.li-panel {
+    padding: var(--space-6);
+    min-height: 220px;
+}
+
+@media (max-width: 600px) {
+    .li-panel {
+        padding: var(--space-5) var(--space-4);
+    }
+}
+
+/* ---- shared buttons ---- */
+
+.li-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-2);
+    padding: var(--space-3) var(--space-5);
+    border-radius: var(--radius);
+    border: 1px solid transparent;
+    font-size: var(--fs-3);
+    font-weight: 600;
+    line-height: 1.2;
+    cursor: pointer;
+    transition: transform 200ms var(--ease-in-out, ease), background-color 200ms var(--ease-in-out, ease),
+        opacity 200ms var(--ease-in-out, ease);
+}
+
+.li-btn--primary {
+    background: var(--signal);
+    color: var(--ground);
+}
+
+.li-btn--primary:hover:not(:disabled),
+.li-btn--primary:focus-visible {
+    transform: translateY(-1px);
+}
+
+.li-btn--primary:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    transform: none;
+}
+
+.li-btn--quiet {
+    background: transparent;
+    border-color: var(--rule);
+    color: var(--ink);
+}
+
+.li-btn--quiet:hover:not(:disabled),
+.li-btn--quiet:focus-visible {
+    background: color-mix(in srgb, var(--ink) 6%, transparent);
+}
+
+/* ---- idle ---- */
+
+.li-idle {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--space-5);
+}
+
+.li-idle__copy {
+    color: var(--ink-soft);
+    margin: 0;
+}
+
+/* ---- loading ---- */
+
+.li-loading {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+    max-width: 480px;
+}
+
+.li-loading__label {
+    margin: 0;
+    color: var(--ink-soft);
+    font-size: var(--fs-2);
+}
+
+.li-progress {
+    width: 100%;
+    height: 8px;
+    border-radius: 999px;
+    background: var(--rule);
+    overflow: hidden;
+}
+
+.li-progress__fill {
+    height: 100%;
+    background: var(--signal);
+    border-radius: inherit;
+    transition: width 200ms var(--ease-in-out, ease);
+}
+
+.li-loading__pct {
+    margin: 0;
+    color: var(--ink);
+    font-size: var(--fs-2);
+}
+
+/* ---- error ---- */
+
+.li-error {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--space-4);
+}
+
+.li-error__message {
+    margin: 0;
+    color: var(--ink);
+}
+
+/* ---- ready ---- */
+
+.li-ready {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-5);
+}
+
+.li-loaded-note {
+    margin: 0;
+    color: var(--verify);
+    font-size: var(--fs-2);
+}
+
+.li-form {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+}
+
+.li-form__label {
+    font-size: var(--fs-2);
+    color: var(--ink-soft);
+}
+
+.li-form__row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-3);
+}
+
+.li-input {
+    flex: 1 1 260px;
+    min-width: 0;
+    padding: var(--space-3) var(--space-4);
+    background: var(--ground);
+    color: var(--ink);
+    border: 1px solid var(--rule);
+    border-radius: var(--radius);
+    font-size: var(--fs-3);
+}
+
+.li-suggestions {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+}
+
+.li-suggestions__label {
+    margin: 0;
+    font-size: var(--fs-2);
+    color: var(--ink-soft);
+}
+
+.li-suggestions__list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+}
+
+.li-chip {
+    background: transparent;
+    border: 1px solid var(--rule);
+    color: var(--ink-soft);
+    border-radius: 999px;
+    padding: var(--space-2) var(--space-4);
+    font-size: var(--fs-1);
+    cursor: pointer;
+    transition: background-color 200ms var(--ease-in-out, ease), color 200ms var(--ease-in-out, ease);
+    max-width: 100%;
+}
+
+.li-chip:hover:not(:disabled),
+.li-chip:focus-visible {
+    background: color-mix(in srgb, var(--ink) 6%, transparent);
+    color: var(--ink);
+}
+
+.li-chip:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.li-run-error {
+    margin: 0;
+    color: var(--ink);
+    background: color-mix(in srgb, var(--baseline) 18%, transparent);
+    border: 1px solid var(--rule);
+    border-radius: var(--radius);
+    padding: var(--space-3) var(--space-4);
+    font-size: var(--fs-2);
+}
+
+/* ---- run history table: same escape hatch as Projects.tsx / KernelChart —
+   the table itself scrolls horizontally at narrow widths, the page never
+   does. ---- */
+
+.li-table-wrap {
+    overflow-x: auto;
+    overflow-y: hidden;
+}
+
+.li-table {
+    min-width: 640px;
+    font-size: var(--fs-2);
+}
+
+.li-table th,
+.li-table td {
+    padding: var(--space-2) var(--space-3);
+    white-space: nowrap;
+}
+
+.li-table__headline {
+    white-space: normal;
+    min-width: 220px;
+    font-weight: 400;
+    color: var(--ink-soft);
+}
+
+/* The off-the-shelf SST-2 model misreads finance headlines. Naming that domain
+   gap is more useful than hiding it, and it explains why the Financial News
+   project trained its own classifier. */
+.li-domain-note {
+    margin: var(--space-4) 0 0;
+    max-width: var(--measure);
+    color: var(--ink-soft);
+    font-size: var(--fs-2);
+    line-height: var(--lh-body);
+}

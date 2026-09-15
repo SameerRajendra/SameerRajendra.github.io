@@ -11,6 +11,8 @@ const SECTIONS: { id: string; label: string }[] = [
     { id: 'focus', label: 'Focus' },
     { id: 'about', label: 'About' },
     { id: 'projects', label: 'Selected work' },
+    { id: 'kv-explorer', label: 'KV cache' },
+    { id: 'live-inference', label: 'Run a model' },
     { id: 'experience', label: 'Experience' },
     { id: 'skills', label: 'Skills' },
     { id: 'education', label: 'Education' },

@@ -1,0 +1,270 @@
+/* KvExplorer.css — the KV cache / serving capacity calculator.
+   Reuses global.css tokens only; no new colors introduced. --verify is
+   reserved for correctness facts, which is exactly what a real H100
+   measurement is — so "measured" values use it, and "projected" values use
+   --signal, keeping the two visually distinct everywhere they appear. */
+
+.kv-explorer {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-6);
+}
+
+/* ------------------------------ Controls --------------------------------- */
+
+.kv-controls {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    gap: var(--space-6);
+}
+
+.kv-field {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+}
+
+.kv-field__label {
+    font-size: var(--fs-1);
+    color: var(--ink-soft);
+}
+
+.kv-segmented {
+    display: inline-flex;
+    flex-wrap: wrap;
+    gap: var(--space-1);
+    background: var(--surface);
+    border: 1px solid var(--rule);
+    border-radius: var(--radius);
+    padding: var(--space-1);
+}
+
+.kv-seg-btn {
+    appearance: none;
+    border: none;
+    background: transparent;
+    color: var(--ink-soft);
+    font: inherit;
+    font-size: var(--fs-2);
+    padding: var(--space-2) var(--space-4);
+    border-radius: calc(var(--radius) - 1px);
+    cursor: pointer;
+    transition: color 200ms var(--ease-in-out, ease), background-color 200ms var(--ease-in-out, ease);
+}
+
+.kv-seg-btn:hover {
+    color: var(--ink);
+}
+
+.kv-seg-btn[aria-pressed='true'] {
+    background: var(--signal);
+    color: var(--ground);
+}
+
+.kv-gpu {
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+    font-size: var(--fs-2);
+}
+
+.kv-gpu__value {
+    color: var(--ink);
+}
+
+.kv-fixed-tag {
+    font-size: var(--fs-1);
+    color: var(--ink-soft);
+    border: 1px solid var(--rule);
+    border-radius: var(--radius);
+    padding: 1px 6px;
+    margin-left: var(--space-2);
+}
+
+/* ------------------------------ Readout ----------------------------------- */
+
+.kv-readout {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-6);
+}
+
+.kv-stats {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(120px, 1fr));
+    gap: var(--space-5);
+    margin: 0;
+}
+
+.kv-stat dt {
+    font-size: var(--fs-1);
+    color: var(--ink-soft);
+    margin-bottom: var(--space-1);
+}
+
+.kv-stat dd {
+    margin: 0;
+    font-size: var(--fs-4);
+    color: var(--ink);
+}
+
+/* --------------------------- HBM occupancy bar ----------------------------- */
+
+.kv-bar-group {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+}
+
+.kv-bar-row {
+    display: grid;
+    grid-template-columns: 160px 1fr auto;
+    align-items: center;
+    gap: var(--space-3);
+}
+
+.kv-bar-row__label {
+    font-size: var(--fs-2);
+    color: var(--ink-soft);
+}
+
+.kv-bar-track {
+    position: relative;
+    height: 10px;
+    border-radius: 999px;
+    background: var(--rule);
+    overflow: hidden;
+}
+
+.kv-bar-fill {
+    position: absolute;
+    inset: 0;
+    transform-origin: left center;
+    border-radius: inherit;
+}
+
+.kv-bar-fill--weights {
+    background: var(--baseline);
+}
+
+.kv-bar-fill--kv {
+    background: var(--signal);
+    transition: transform 400ms var(--ease-out-expo, ease-out);
+}
+
+.kv-bar-row__value {
+    font-size: var(--fs-2);
+    color: var(--ink);
+    white-space: nowrap;
+}
+
+.kv-bar-caption {
+    margin: 0;
+    font-size: var(--fs-1);
+    color: var(--ink-soft);
+}
+
+/* ------------------------ Concurrent sequences result ---------------------- */
+
+.kv-result {
+    border-top: 1px solid var(--rule);
+    padding-top: var(--space-5);
+}
+
+.kv-result__label {
+    margin: 0 0 var(--space-3);
+    font-size: var(--fs-2);
+    color: var(--ink-soft);
+}
+
+.kv-result__values {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-6);
+    align-items: baseline;
+}
+
+.kv-result__value {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-1);
+    animation: kv-pop 400ms var(--ease-out-expo, ease-out);
+}
+
+.kv-result__number {
+    font-family: var(--font-mono);
+    font-size: var(--fs-6);
+    font-weight: 600;
+    line-height: 1;
+}
+
+.kv-result__value--projected .kv-result__number {
+    color: var(--signal);
+}
+
+.kv-result__value--measured .kv-result__number {
+    color: var(--verify);
+}
+
+.kv-result__tag {
+    font-size: var(--fs-1);
+    color: var(--ink-soft);
+}
+
+.kv-result__note {
+    margin: var(--space-3) 0 0;
+    font-size: var(--fs-2);
+    color: var(--ink-soft);
+    max-width: var(--measure);
+}
+
+@keyframes kv-pop {
+    from {
+        opacity: 0;
+        transform: translate3d(0, 6px, 0);
+    }
+    to {
+        opacity: 1;
+        transform: none;
+    }
+}
+
+/* -------------------------------- Formula ---------------------------------- */
+
+.kv-formula {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+    border-top: 1px solid var(--rule);
+    padding-top: var(--space-4);
+}
+
+.kv-formula__line {
+    margin: 0;
+    font-size: var(--fs-1);
+    color: var(--ink-soft);
+    word-break: break-word;
+}
+
+.kv-formula__line--sub {
+    color: var(--ink);
+}
+
+/* -------------------------------- Small screens ----------------------------- */
+
+@media (max-width: 560px) {
+    .kv-stats {
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .kv-bar-row {
+        grid-template-columns: 1fr;
+        row-gap: var(--space-1);
+    }
+
+    .kv-bar-row__value {
+        justify-self: flex-start;
+    }
+}

@@ -184,6 +184,18 @@ const KernelChart: React.FC = () => {
                             const op = optimizedPts[i];
                             const speedupX = (bp.x + op.x) / 2 + 16;
                             const speedupY = (bp.y + op.y) / 2 + 4;
+                            // The leftmost point sits at x === MARGIN.left, the same x
+                            // the y-axis tick labels are anchored against — a label
+                            // centered on that point (x - 32 .. x + 32) bleeds into the
+                            // tick-label gutter and can collide with a nearby gridline's
+                            // value (e.g. "0.910" against the "1" tick). Anchor only this
+                            // point's labels to the right of the dot instead of centering
+                            // them on it, clearing the gutter regardless of chart width —
+                            // every other point sits well clear of the axis already.
+                            const isEdge = i === 0;
+                            const baselineFoX = isEdge ? bp.x + 4 : bp.x - 32;
+                            const optimizedFoX = isEdge ? op.x + 4 : op.x - 32;
+                            const edgeLabelClass = isEdge ? ' kc-value-label--edge' : '';
                             return (
                                 <g key={r.context}>
                                     <foreignObject x={speedupX} y={speedupY - 11} width={52} height={16} className="kc-fo">
@@ -194,26 +206,26 @@ const KernelChart: React.FC = () => {
 
                                     <circle cx={bp.x} cy={bp.y} r={5} className="kc-dot kc-dot--baseline" />
                                     <foreignObject
-                                        x={bp.x - 32}
+                                        x={baselineFoX}
                                         y={baselineLabelY(bp.y) - 11}
                                         width={64}
                                         height={16}
                                         className="kc-fo"
                                     >
-                                        <div className="kc-value-label kc-value-label--baseline tabular-nums">
+                                        <div className={`kc-value-label kc-value-label--baseline tabular-nums${edgeLabelClass}`}>
                                             <CountUp value={formatMs(r.baselineMs)} duration={700} />
                                         </div>
                                     </foreignObject>
 
                                     <circle cx={op.x} cy={op.y} r={5} className="kc-dot kc-dot--signal" />
                                     <foreignObject
-                                        x={op.x - 32}
+                                        x={optimizedFoX}
                                         y={optimizedLabelY(op.y) - 11}
                                         width={64}
                                         height={16}
                                         className="kc-fo"
                                     >
-                                        <div className="kc-value-label kc-value-label--signal tabular-nums">
+                                        <div className={`kc-value-label kc-value-label--signal tabular-nums${edgeLabelClass}`}>
                                             <CountUp value={formatMs(r.optimizedMs)} duration={700} />
                                         </div>
                                     </foreignObject>
@@ -402,6 +414,10 @@ const KernelChart: React.FC = () => {
                 }
                 .kc-value-label { font-size: 11px; }
                 .kc-speedup-label { font-size: 12px; justify-content: flex-start; }
+                /* Leftmost point only (see the isEdge check above): left-align
+                   instead of centering, so the label reads out from the dot
+                   rather than straddling the y-axis tick-label gutter. */
+                .kc-value-label--edge { justify-content: flex-start; }
 
                 .kc-hit {
                     fill: transparent;

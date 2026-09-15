@@ -1,14 +1,61 @@
-import React, { useEffect } from 'react';
+import React, { Suspense, useEffect } from 'react';
 import Header from './components/Header';
 import Hero from './components/Hero';
 import Focus from './components/Focus';
 import About from './components/About';
 import Projects from './components/Projects';
+import Section from './components/Section';
 import Experience from './components/Experience';
 import Skills from './components/Skills';
 import Education from './components/Education';
 import Awards from './components/Awards';
 import Contact from './components/Contact';
+import { useInView } from './hooks/useInView';
+
+// Both demos are code-split: their JS/CSS chunks are not part of the main
+// bundle, and (for the KV explorer — see DeferredDemo below) not even
+// fetched until the visitor scrolls near the section. A visitor who never
+// reaches "Selected work" downloads neither.
+//
+// The KV explorer owns no <Section> of its own (see DeferredDemo): its
+// wrapping <Section id="kv-explorer"> below renders eagerly so the id/h2
+// exist immediately for the contents rail and Header's IntersectionObserver
+// (which queries document.getElementById once on mount) — only the
+// interactive calculator inside it is deferred.
+//
+// Live inference (owned by a concurrent agent) renders its OWN <Section
+// id="live-inference">, so no extra <Section> is added here — that would
+// duplicate the heading. It is still mounted through DeferredDemo (not a
+// bare <Suspense>): legacy renderToString cannot wait on a React.lazy
+// import, so an eagerly-rendered Suspense boundary around it breaks
+// prerender (it emits a broken internal error marker, exposing a local
+// file path, in place of the section, and everything upstream of it in the
+// same boundary). Gating on inView means the lazy import is never attempted
+// server-side (inView starts false with no window), so prerender only ever
+// sees the plain placeholder for this section — exactly like the KV
+// explorer above.
+const KvExplorer = React.lazy(() => import('./components/demos/KvExplorer'));
+const LiveInference = React.lazy(() => import('./components/demos/LiveInference'));
+
+// Defers fetching a lazy demo's chunk until its wrapper scrolls near the
+// viewport (rootMargin gives it a head start so it's ready before fully in
+// view), rather than fetching it the moment the page mounts. Reserves
+// `minHeight` both before and during the fetch so nothing shifts when the
+// real content swaps in — CLS stays 0.
+const DeferredDemo: React.FC<{ minHeight: number; children: React.ReactNode }> = ({ minHeight, children }) => {
+    const [ref, inView] = useInView<HTMLDivElement>({ rootMargin: '600px 0px', threshold: 0 });
+    return (
+        <div ref={ref}>
+            {inView ? (
+                <Suspense fallback={<div className="demo-placeholder" style={{ minHeight }} aria-hidden="true" />}>
+                    {children}
+                </Suspense>
+            ) : (
+                <div className="demo-placeholder" style={{ minHeight }} aria-hidden="true" />
+            )}
+        </div>
+    );
+};
 
 // Single shared, passive, rAF-batched scroll listener driving both the top
 // progress bar and every .parallax element on the page (see MOTION-SPEC
@@ -75,12 +122,44 @@ const App: React.FC = () => {
                 <Focus />
                 <About />
                 <Projects />
+
+                <Section id="kv-explorer" heading="KV cache and serving capacity">
+                    <p className="measure demo-intro">
+                        Pick a context length and a KV cache precision. The numbers below are computed live from
+                        Llama-3.1-8B&rsquo;s real architecture, then checked against what I measured on an H100.
+                    </p>
+                    <DeferredDemo minHeight={640}>
+                        <KvExplorer />
+                    </DeferredDemo>
+                </Section>
+
+                <DeferredDemo minHeight={560}>
+                    <LiveInference />
+                </DeferredDemo>
+
                 <Experience />
                 <Skills />
                 <Education />
                 <Awards />
                 <Contact />
             </main>
+
+            <style>{`
+                .demo-intro {
+                    color: var(--ink-soft);
+                    margin-bottom: var(--space-5);
+                }
+                .demo-placeholder {
+                    background: var(--surface);
+                    border: 1px solid var(--rule);
+                    border-radius: var(--radius);
+                }
+                @media (max-width: 560px) {
+                    .demo-placeholder {
+                        min-height: 480px !important;
+                    }
+                }
+            `}</style>
         </>
     );
 };

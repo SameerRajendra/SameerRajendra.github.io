@@ -83,6 +83,10 @@
     list-style: none;
     display: flex;
     flex-wrap: wrap;
+    /* flex items collapse the trailing space in the ", " separator below, so
+       the gap has to be explicit or the tags run together as "a,b,c". */
+    column-gap: 0.35em;
+    row-gap: 0.2em;
     margin: 0 0 var(--space-4);
     padding: 0;
     color: var(--ink-soft);
@@ -90,7 +94,7 @@
 }
 
 .project__tags li::after {
-    content: ", ";
+    content: ",";
 }
 
 .project__tags li:last-child::after {
